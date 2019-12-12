@@ -4,6 +4,7 @@ package com.example.studentmanagement;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,13 @@ import java.util.List;
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ArrayViewHolder> {
     public static List<Student>  data = new ArrayList<>();
 
+    private OnItemClicked onClick;
+
+    public interface OnItemClicked {
+        void onClickDelete(int position);
+        void onClickUpdate(int position);
+    }
+
     @NonNull
     @Override
     public ArrayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -24,27 +32,51 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ArrayVie
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ArrayViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ArrayViewHolder holder, final int position) {
         holder.tvName.setText("Name:"+data.get(position).getStudentName() + "");
-        holder.tvID.setText("ID:"+data.get(position).getStudentID() + "");
+
+        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onClickDelete(position);
+            }
+        });
+        holder.btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClick.onClickUpdate(position);
+            }
+        });
+
 
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        if (data.size()!=0){
+            return data.size();
+        }else {
+            return 0;
+        }
+
+
     }
 
     class ArrayViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvID, tvName;
+        TextView tvName;
+        Button btnDelete,btnUpdate;
 
         public ArrayViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvID = itemView.findViewById(R.id.txtID);
+
             tvName = itemView.findViewById(R.id.txtName);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnUpdate = itemView.findViewById(R.id.btnUpdate);
         }
     }
-
+    public  void  setOnClick(OnItemClicked onClick) {
+        this.onClick = onClick;
+    }
 
 }

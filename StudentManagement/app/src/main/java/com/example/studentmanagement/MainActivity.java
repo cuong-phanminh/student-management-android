@@ -19,7 +19,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements StudentAdapter.OnItemClicked {
     ListView listView;
     EditText et1, et2;
     StudentDatabase db;
@@ -40,23 +40,25 @@ public class MainActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 openSecondScreen();
             }
         });
 
         rvStudent = findViewById(R.id.rvStudent);
         rvStudent.setLayoutManager(new LinearLayoutManager(this));
-        final StudentAdapter adapter = new StudentAdapter();
+
+        studentAdapter = new StudentAdapter();
+        studentAdapter.setOnClick(MainActivity.this);
+
 
         new AsyncTask<Void, Void, Void>() {
             @SuppressLint("WrongThread")
             @Override
             protected Void doInBackground(Void... voids) {
-               studentAdapter.data = db.studentDao().getAll();
-                final List<Student> studentList = new ArrayList<>();
-                rvStudent.setAdapter(adapter);
-
-                Log.i("database1", "size" + studentList.size());
+                studentAdapter.data = db.studentDao().getAll();
+                rvStudent.setAdapter(studentAdapter);
+                //Log.i("database1", "size" + studentList.size());
 
                 return null;
             }
@@ -67,13 +69,73 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getAndShowData();
 
     }
 
+    private void getAndShowData() {
+        new AsyncTask<Void, Void, List<Student>>() {
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            protected List<Student> doInBackground(Void... voids) {
+                List<Student> students = db.studentDao().getAll();
+                return students;
+            }
+
+            @Override
+            protected void onPostExecute(List<Student> students) {
+                super.onPostExecute(students);
+                studentAdapter.data = students;
+                studentAdapter.notifyDataSetChanged();
+
+            }
+        }.execute();
+    }
+
     //cach chuyen screen
-    private void openSecondScreen(){
-        Intent intent=new Intent(this, Add.class);
+    private void openSecondScreen() {
+        Intent intent = new Intent(this, Add.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onClickDelete(final int position) {
+        new AsyncTask<Void, Void, List<Student>>() {
+            @SuppressLint("StaticFieldLeak")
+            @Override
+            protected List<Student> doInBackground(Void... voids) {
+                db.studentDao().delete(studentAdapter.data.get(position));
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(List<Student> students) {
+                super.onPostExecute(students);
+                studentAdapter.notifyDataSetChanged();
+                getAndShowData();
+            }
+        }.execute();
+    }
+
+    @Override
+    public void onClickUpdate(final int position) {
+//        new AsyncTask<Void, Void, List<Student>>() {
+//            @SuppressLint("StaticFieldLeak")
+//            @Override
+//            protected List<Student> doInBackground(Void... voids) {
+//                db.studentDao().update(studentAdapter.data.get(position));
+//
+//                return null;
+//            }
+//
+//            @Override
+//            protected void onPostExecute(List<Student> students) {
+//                super.onPostExecute(students);
+//                studentAdapter.notifyDataSetChanged();
+//                getAndShowData();
+//            }
+//        }.execute();
     }
 }
 

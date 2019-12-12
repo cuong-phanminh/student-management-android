@@ -27,7 +27,7 @@ public class Add extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_main);
 
-        et1 = findViewById(R.id.et1);
+//        et1 = findViewById(R.id.et1);
         et2 = findViewById(R.id.et2);
         btnAddStudent = findViewById(R.id.btnAddStudent);
 
@@ -47,10 +47,9 @@ public class Add extends AppCompatActivity {
 
     }
     public void addStudent(){
-        final Student student = new Student();
-        student.setStudentID(Integer.parseInt(et1.getText().toString()));
-        student.setStudentName(et2.getText().toString());
 
+//        student.setStudentID(Integer.parseInt(et1.getText().toString()));
+        final Student student = new Student(et2.getText().toString());
         new AsyncTask<Void, Void, Void>() {
             @SuppressLint("WrongThread")
             @Override

@@ -5,38 +5,27 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class Student {
-    @PrimaryKey()
+
+    @PrimaryKey(autoGenerate = true)
     private int studentID;
     private String studentName;
     static public int soluong;
+    public Student()
+    {
 
-        //Hàm tạo không đối số
-
-        public Student()
+    }
+  //Hàm tạo 2 đối số
+        public Student(String name)
         {
-
-            studentID=0;
-            studentName="";
-        }
-        //Hàm tạo 2 đối số
-        public Student(int id, String name)
-        {
-            studentID=id;
-            studentName=name;
+            this.studentName=name;
         }
         //Phương thức get, set
-        public int getStudentID()
-        {
-            return studentID;
-        }
+
         public String getStudentName()
         {
             return studentName;
         }
-        public void setStudentID(int id)
-        {
-            this.studentID= id;
-        }
+
         public void setStudentName(String name)
         {
             this.studentName= name;
@@ -46,4 +35,12 @@ public class Student {
         {
             return "Id:"+this.studentID+" - Name:"+this.studentName;
         }
+
+    public int getStudentID() {
+        return studentID;
+    }
+
+    public void setStudentID(int studentID) {
+        this.studentID = studentID;
+    }
 }
