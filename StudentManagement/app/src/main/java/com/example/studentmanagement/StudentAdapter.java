@@ -1,12 +1,9 @@
 package com.example.studentmanagement;
 
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,35 +13,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ArrayViewHolder> {
-    List<String> data = new ArrayList<>();
+    public static List<Student>  data = new ArrayList<>();
 
     @NonNull
     @Override
     public ArrayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.content_main,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.iterm_main, parent, false);
 
         return new ArrayViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ArrayViewHolder holder, int position) {
-        holder.tvTitle.setText( data.get(position));
+        holder.tvName.setText("Name:"+data.get(position).getStudentName() + "");
+        holder.tvID.setText("ID:"+data.get(position).getStudentID() + "");
+
     }
 
     @Override
     public int getItemCount() {
-       return data.size();
+        return data.size();
     }
 
-    class ArrayViewHolder extends RecyclerView.ViewHolder{
+    class ArrayViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvTitle;
+        TextView tvID, tvName;
 
         public ArrayViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.txtTitle);
+            tvID = itemView.findViewById(R.id.txtID);
+            tvName = itemView.findViewById(R.id.txtName);
         }
     }
 
 
-    }
+}
